@@ -34,6 +34,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.logging.Logger;
 
 import javax.servlet.ServletException;
 import javax.servlet.ServletOutputStream;
@@ -79,6 +80,7 @@ import com.occamlab.te.util.StringUtils;
  */
 public class TestServlet extends HttpServlet {
     public static final String CTL_NS = "http://www.occamlab.com/ctl";
+    private static Logger logger = Logger.getLogger("com.occamlab.te.web.TestServlet");
 
     DocumentBuilder DB;
     Engine engine;
@@ -124,7 +126,7 @@ public class TestServlet extends HttpServlet {
 
             for (Entry<String, List<File>> sourceEntry : conf.getSources().entrySet()) {
                 String sourcesName = sourceEntry.getKey();
-//              System.out.println("TestServlet: " + sourcesName);
+                logger.info("TestServlet - Processing Test Suite: " + sourcesName);
                 SetupOptions setupOpts = new SetupOptions();
                 setupOpts.setWorkDir(conf.getWorkDir());
                 setupOpts.setSourcesName(sourcesName);
@@ -137,12 +139,14 @@ public class TestServlet extends HttpServlet {
                 for (File ctlFile: index.getDependencies()) {
                     String encodedName = URLEncoder.encode(ctlFile.getAbsolutePath(), "UTF-8");
                    // encodedName = encodedName.replace('%', '~');  // In Java 5, the Document.parse function has trouble with the URL % encoding
+                  
                     String basename = encodedName;
                     int i = basename.lastIndexOf('.');
                     if (i > 0) {
                         basename = basename.substring(0, i);
                     }
-                    File indexFile = new File(new File(conf.getWorkDir(), encodedName), "index.xml");
+                 //   File indexFile = new File(new File(conf.getWorkDir(), encodedName), "index.xml"); [LB 2011-04-12] //issue with getting double folder path and not being able to find the test scripts
+                    File indexFile = new File(encodedName, "index.xml");
                     File htmlFile = new File(listings, basename + ".html");
                     boolean needsGenerating = true;
                     if (htmlFile.exists()) {
@@ -191,7 +195,7 @@ public class TestServlet extends HttpServlet {
             String s = getServletConfig().getInitParameter("cacheSize");
             if (s != null) {
                 cacheSize = Integer.parseInt(s);
-                System.out.println("Set cacheSize to " + s);
+                logger.info("Set cacheSize to " + s);
             }
             engine = new Engine(indexes.values(), classLoaders, cacheSize);
         } catch (ServletException e) {
