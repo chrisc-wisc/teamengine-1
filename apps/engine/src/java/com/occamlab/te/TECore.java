@@ -34,11 +34,13 @@ import java.lang.reflect.Method;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
+import java.util.AbstractMap.SimpleEntry;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.zip.CRC32;
@@ -107,6 +109,7 @@ public class TECore implements Runnable {
     Engine engine;                      // Engine object
     Index index;
     RuntimeOptions opts;
+    String testServletURL = null;
 //    String sessionId;                   // Session identifier
 //    String sourcesName;                 // Name of active collection of sources
 //    File logDir = null;                 // Log directory
@@ -115,7 +118,7 @@ public class TECore implements Runnable {
 //    int mode = Test.TEST_MODE;          // Test mode
     String testPath;                    // Uniquely identifies a test instance
     String fnPath = "";                 // Uniquely identifies an XSL function instance within a test instance
-    String indent = "";                 // Contains the appropriate number of spaces for the current indet level
+    String indent = "";                 // Contains the appropriate number of spaces for the current indent level
     String contextLabel = "";           // Current context label set by ctl:for-each
     int result;                         // Result for current test
     Document prevLog = null;            // Log document for current test from previous  test execution (resume and retest modes only)
@@ -551,10 +554,10 @@ public class TECore implements Runnable {
         return result;
     }
 
-    public void callTest(XPathContext context, String localName, String NamespaceURI, NodeInfo params, String callId) throws Exception {
+    public synchronized void callTest(XPathContext context, String localName, String namespaceURI, NodeInfo params, String callId) throws Exception {
 //        System.out.println("call_test");
 //        System.out.println(params.getClass().getName());
-        String key = "{" + NamespaceURI + "}" + localName;
+        String key = "{" + namespaceURI + "}" + localName;
         TestEntry test = index.getTest(key);
         
         if (logger != null) {
@@ -683,9 +686,9 @@ public class TECore implements Runnable {
         return n.getUnderlyingNode();
     }
 
-    public Object callFunction(XPathContext context, String localName, String NamespaceURI, NodeInfo params) throws Exception {
+    public Object callFunction(XPathContext context, String localName, String namespaceURI, NodeInfo params) throws Exception {
 //        System.out.println("callFunction {" + NamespaceURI + "}" + localName);
-        String key = "{" + NamespaceURI + "}" + localName;
+        String key = "{" + namespaceURI + "}" + localName;
         List<FunctionEntry> functions = index.getFunctions(key);
         Node paramsNode = NodeOverNodeInfo.wrap(params);
         List<Element> paramElements = DomUtils.getElementsByTagName(paramsNode, "param");
@@ -779,7 +782,7 @@ public class TECore implements Runnable {
                 }
             }
         }
-        throw new Exception("No function {" + NamespaceURI + "}" + localName + " with a compatible signature.");
+        throw new Exception("No function {" + namespaceURI + "}" + localName + " with a compatible signature.");
     }
 
     public void warning() {
@@ -1014,7 +1017,6 @@ public class TECore implements Runnable {
         String action = "";
         String contentType = "";
         Element body = null;
-        Element header = null;
 
         // Read in the test information (from CTL)
         NodeList nl = xml.getChildNodes();
@@ -1034,7 +1036,7 @@ public class TECore implements Runnable {
         }
 
         //Get the list of the header blocks needed to build the SOAP Header section
-        List headerBloks = DomUtils.getElementsByTagNameNS(xml,CTL_NS, HEADER_BLOCKS);
+        List<Element> headerBloks = DomUtils.getElementsByTagNameNS(xml,CTL_NS, HEADER_BLOCKS);
         // Open the URLConnection
         URLConnection uc = new URL(sUrl).openConnection();
         if (uc instanceof HttpURLConnection) {
@@ -1055,7 +1057,7 @@ public class TECore implements Runnable {
         uc.setRequestProperty("Content-Length", Integer.toString(bytes.length));
 
         if (version.equals(SOAP_V_1_1)) {
-            //Handlinh HTTP binding for SOAP 1.1
+            //Handle HTTP binding for SOAP 1.1
 			// uc.setRequestProperty("Accept", "application/soap+xml");
             uc.setRequestProperty("Accept", "text/xml");
             uc.setRequestProperty("SOAPAction", action);
@@ -1065,7 +1067,7 @@ public class TECore implements Runnable {
             }
             uc.setRequestProperty("Content-Type", contentType);
         } else {
-            //Handl HTTP binding for SOAP 1.2
+            //Handle HTTP binding for SOAP 1.2
             uc.setRequestProperty("Accept", "application/soap+xml");
             contentType = "application/soap+xml";
             if (!charset.equals("")) {
@@ -1650,6 +1652,7 @@ public class TECore implements Runnable {
         xt.setParameter(new QName("thread"), new XdmAtomicValue(Long.toString(Thread.currentThread().getId())));
         xt.setParameter(new QName("method"), new XdmAtomicValue(method));
         xt.setParameter(new QName("base"), new XdmAtomicValue(opts.getBaseURI()));
+        xt.setParameter(new QName("action"), new XdmAtomicValue(testServletURL));
         StringWriter sw = new StringWriter();
         Serializer serializer = new Serializer();
         serializer.setOutputWriter(sw);
@@ -1791,6 +1794,14 @@ public class TECore implements Runnable {
     
     public RuntimeOptions getOpts() {
         return opts;
+    }
+
+    public String getTestServletURL() {
+        return testServletURL;
+    }
+
+    public void setTestServletURL(String testServletURL) {
+        this.testServletURL = testServletURL;
     }
 //
 //    public String getSourcesName() {

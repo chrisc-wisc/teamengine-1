@@ -329,7 +329,7 @@ public class DomUtils {
         } else {
             return null;
         }
-        if (nl.getLength() >= 0) {
+        if (nl.getLength() > 0) {
             return (Element)nl.item(0);
         } else {
             return null;

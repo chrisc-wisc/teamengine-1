@@ -46,6 +46,7 @@ public class TEClassLoader extends ClassLoader {
         registeredClasses.add("com.occamlab.te.parsers.HTTPParser");
         registeredClasses.add("com.occamlab.te.parsers.SchematronValidatingParser");
         registeredClasses.add("com.occamlab.te.parsers.XMLValidatingParser");
+        registeredClasses.add("com.occamlab.te.parsers.XSLTransformationParser");
     }
 
     public URL getResource(String name) {
@@ -67,8 +68,6 @@ public class TEClassLoader extends ClassLoader {
                 try {
                     return u.openStream();
                 } catch (IOException e) {
-                    logger.log(Level.SEVERE,"IOException",e);
-
                 }
             }
         }

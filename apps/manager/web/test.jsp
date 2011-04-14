@@ -31,15 +31,16 @@ String sessionId;
 	<head>
 		<title>Executing Tests</title>
 		<script>
-			var TIMEOUT = 1000;
-		    
+			var LONG_TIMEOUT = 4000;
+			var SHORT_TIMEOUT = 1000;
+
+		    var timeout = SHORT_TIMEOUT;
 			var timerId = 0;
 			var form;
 			var xhr;
 			var sessionId;
 			var threadId;
 			var console;
-			var busy = true;
 
 			function start() {
 				if (window.XMLHttpRequest) {
@@ -93,7 +94,7 @@ if (mode.equals("test") || mode.equals("retest")) {
 				if (console) {
 					console.focus();
 				}
-				timerId = setTimeout("update()", TIMEOUT);
+				timerId = setTimeout("update()", timeout);
 			}
 			
 			function stop() {
@@ -107,6 +108,12 @@ if (mode.equals("test") || mode.equals("retest")) {
 				xhr.send(null);
 				loadLog();
 			}
+
+			function formSubmitted() {
+				window.te_test_panel.location = "executing.html";
+				timeout = SHORT_TIMEOUT;
+				update();
+			}
 			
 			function update() {
 				if (timerId != 0) {
@@ -117,7 +124,6 @@ if (mode.equals("test") || mode.equals("retest")) {
 			    var url = "test?te-operation=GetStatus&thread=" + threadId + "&t=" + d.getTime();
 				xhr.open("get", url, false);
 				xhr.send(null);
-				xhr
 				var xml = xhr.responseXML;
 				var statusNodes = xml.getElementsByTagName("status");
 				if (statusNodes.length != 1) {
@@ -141,19 +147,13 @@ if (mode.equals("test") || mode.equals("retest")) {
 					url = "test?te-operation=GetForm&thread=" + threadId + "&t=" + d.getTime();
 					window.te_test_panel.location = url;
 					window.te_test_panel.focus();
-					busy = false;
+					timeout = LONG_TIMEOUT;
+				}
+				var complete = status.getAttribute("complete");
+				if (complete) {
+					loadLog();
 				} else {
-					var complete = status.getAttribute("complete");
-					if (complete) {
-//						alert("Testing Complete");
-						loadLog();
-					} else {
-						if (!busy) {
-							window.te_test_panel.location = "executing.html";
-							busy = true;
-						}
-						timerId  = setTimeout("update()", TIMEOUT);
-					}
+					timerId  = setTimeout("update()", timeout);
 				}
 			}
 			

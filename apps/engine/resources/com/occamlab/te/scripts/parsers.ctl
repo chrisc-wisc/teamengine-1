@@ -48,6 +48,10 @@
 		<ctl:java class="com.occamlab.te.parsers.XMLValidatingParser" method="parse" initialized="true"/>
 	</ctl:parser>
 
+	<ctl:parser name="parsers:XSLTransformationParser">
+		<ctl:java class="com.occamlab.te.parsers.XSLTransformationParser" method="parse" initialized="true"/>
+	</ctl:parser>
+
 	<ctl:parser name="parsers:SchematronValidatingParser">
 		<ctl:java class="com.occamlab.te.parsers.SchematronValidatingParser" method="parse" initialized="true"/>
 	</ctl:parser>

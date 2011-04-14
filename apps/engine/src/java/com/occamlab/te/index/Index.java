@@ -114,7 +114,7 @@ public class Index {
         if (indexFile != null) {
             long indexDate = indexFile.lastModified();
             for (File file : dependencies) {
-                if (file.lastModified() > indexDate) {
+                if (file.lastModified() + 1000 > indexDate) {
                     return true;
                 }
             }

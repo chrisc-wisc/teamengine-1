@@ -68,15 +68,23 @@ public class Config {
             home = homeElem.getTextContent();
 
             Element scriptsDirEl = DomUtils.getElementByTagName(configElem, "scriptsdir");
-            scriptsDir = findFile(scriptsDirEl.getTextContent(), cl);
-            if (!scriptsDir.isDirectory()) {
-                System.out.println("Error: Directory " + scriptsDirEl.getTextContent() + " does not exist.");
+            if (scriptsDirEl == null) {
+                scriptsDir = null;
+            } else {
+	            scriptsDir = findFile(scriptsDirEl.getTextContent(), cl);
+	            if (!scriptsDir.isDirectory()) {
+	                System.out.println("Error: Directory " + scriptsDirEl.getTextContent() + " does not exist.");
+	            }
             }
 
             Element resourcesDirEl = DomUtils.getElementByTagName(configElem, "resourcesdir");
-            resourcesDir = findFile(resourcesDirEl.getTextContent(), cl);
-            if (!resourcesDir.isDirectory()) {
-                System.out.println("Error: Directory " + resourcesDirEl.getTextContent() + " does not exist.");
+            if (resourcesDirEl == null) {
+                resourcesDir = null;
+            } else {
+	            resourcesDir = findFile(resourcesDirEl.getTextContent(), cl);
+	            if (!resourcesDir.isDirectory()) {
+	                System.out.println("Error: Directory " + resourcesDirEl.getTextContent() + " does not exist.");
+	            }
             }
 
             Element usersDirEl = DomUtils.getElementByTagName(configElem, "usersdir");
@@ -153,12 +161,20 @@ public class Config {
 
                                 ArrayList<File> list = new ArrayList<File>();
                                 for (Element sourceEl : DomUtils.getElementsByTagName(el, "source")) {
-                                    list.add(new File(scriptsDir, sourceEl.getTextContent()));
+                                    if (scriptsDir == null) {
+                                        list.add(new File(sourceEl.getTextContent()));
+                                    } else {
+                                    	list.add(new File(scriptsDir, sourceEl.getTextContent()));
+                                    }
                                 }
                                 sources.put(key, list);
                                 
                                 for (Element resourcesEl : DomUtils.getElementsByTagName(el, "resources")) {
-                                    resources.put(key, new File(resourcesDir, resourcesEl.getTextContent()));
+                                    if (resourcesDir == null) {
+                                        resources.put(key, new File(resourcesEl.getTextContent()));
+                                    } else {
+                                    	resources.put(key, new File(resourcesDir, resourcesEl.getTextContent()));
+                                    }
                                 }
                                 
                                 for (Element webdirEl : DomUtils.getElementsByTagName(el, "webdir")) {

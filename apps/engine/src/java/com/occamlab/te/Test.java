@@ -46,6 +46,7 @@ public class Test {
     public static final String XSL_NS = "http://www.w3.org/1999/XSL/Transform";
     public static final String TE_NS = "http://www.occamlab.com/te";
     public static final String CTL_NS = "http://www.occamlab.com/ctl";
+    public static final String CTLP_NS = "http://www.occamlab.com/te/parsers";
 
     /**
      * Displays startup command syntax
@@ -129,6 +130,8 @@ public class Test {
                 mode = RESUME_MODE;
             } else if (args[i].equals("-mode=doc")) {
                 mode = DOC_MODE;
+            } else if (args[i].equals("-mode=check")) {
+                mode = CHECK_MODE;
             } else if (args[i].equals("-mode=pplogs")){
             	mode = PRETTYLOG_MODE;
             } else if (args[i].startsWith("-mode=")) {

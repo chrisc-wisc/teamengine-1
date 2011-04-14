@@ -26,6 +26,7 @@
 	<xsl:param name="thread"/>
 	<xsl:param name="method"/>
 	<xsl:param name="base"/>
+	<xsl:param name="action"/>
 	<xsl:output method="html"/>
 
 	<xsl:template match="/">
@@ -41,7 +42,9 @@
 							<xsl:attribute name="enctype">multipart/form-data</xsl:attribute>
 						</xsl:if>
 						<xsl:if test="$web = 'yes'">
-							<xsl:attribute name="action">../test</xsl:attribute>
+							<xsl:attribute name="action">
+								<xsl:value-of select="$action"/>
+							</xsl:attribute>
 							<input type="hidden" name="te-operation" value="SubmitForm"/>
 							<input type="hidden" name="te-thread" value="{$thread}"/>
 						</xsl:if>

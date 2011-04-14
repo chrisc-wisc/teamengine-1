@@ -21,9 +21,14 @@
  ****************************************************************************/
 package com.occamlab.te.web;
 
+import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.io.PrintStream;
+import java.net.HttpURLConnection;
 import java.net.URI;
 import java.net.URL;
 import java.net.URLEncoder;
@@ -34,7 +39,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.logging.Logger;
 
 import javax.servlet.ServletException;
 import javax.servlet.ServletOutputStream;
@@ -44,11 +48,22 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerConfigurationException;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.TransformerFactoryConfigurationError;
+import javax.xml.transform.dom.DOMResult;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
 
 import net.sf.saxon.FeatureKeys;
+import net.sf.saxon.dom.NodeOverNodeInfo;
+import net.sf.saxon.expr.XPathContext;
+import net.sf.saxon.om.NodeInfo;
 import net.sf.saxon.s9api.Processor;
 import net.sf.saxon.s9api.Serializer;
+import net.sf.saxon.s9api.XdmNode;
 import net.sf.saxon.s9api.XsltCompiler;
 import net.sf.saxon.s9api.XsltExecutable;
 import net.sf.saxon.s9api.XsltTransformer;
@@ -59,6 +74,7 @@ import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
+import org.w3c.dom.Node;
 
 import com.occamlab.te.Engine;
 import com.occamlab.te.Generator;
@@ -80,12 +96,74 @@ import com.occamlab.te.util.StringUtils;
  */
 public class TestServlet extends HttpServlet {
     public static final String CTL_NS = "http://www.occamlab.com/ctl";
-    private static Logger logger = Logger.getLogger("com.occamlab.te.web.TestServlet");
 
     DocumentBuilder DB;
+    Transformer identityTransformer;
     Engine engine;
     Map<String, Index> indexes;
     Config conf;
+/*    
+    static String testServletURL;
+    static int monitorCallSeq = 0;
+    static int monitorUrlSeq = 0;
+    static Map<String, MonitorCall> monitors = new HashMap<String, MonitorCall>();
+
+    static public String allocateMonitorUrl(String url) {
+        String monitorUrl = testServletURL + "/monitor/" + Integer.toString(monitorUrlSeq);
+        monitorUrlSeq++;
+        MonitorCall mc = new MonitorCall(url);
+        monitors.put(monitorUrl, mc);
+        return monitorUrl;
+    }
+
+    // Monitor without parser that doesn't trigger a test
+    static public String createMonitor(TECore core, String monitorUrl) {
+        return createMonitor(core, monitorUrl, null, "");
+    }
+
+    // Monitor that doesn't trigger a test
+    static public String createMonitor(TECore core, String monitorUrl, Node parserInstruction, String passThrough) {
+        MonitorCall mc = monitors.get(monitorUrl);
+    	mc.setCore(core);
+        if (parserInstruction != null) {
+        	mc.setParserInstruction(DomUtils.getElement(parserInstruction));
+        	mc.setPassThrough(Boolean.parseBoolean(passThrough));
+        }
+        return "";
+    }
+
+    // Monitor without parser that triggers a test
+    static public String createMonitor(TECore core, XPathContext context, String url, String localName, String namespaceURI, NodeInfo params, String callId) throws Exception {
+        return createMonitor(core, context, url, localName, namespaceURI, params, null, "", callId);
+    }
+
+    // Monitor that triggers a test
+    static public String createMonitor(TECore core, XPathContext context, String monitorUrl, String localName, String namespaceURI, NodeInfo params, NodeInfo parserInstruction, String passThrough, String callId) throws Exception {
+        MonitorCall mc = monitors.get(monitorUrl);
+    	mc.setCore(core);
+        mc.setContext(context);
+        mc.setLocalName(localName);
+        mc.setNamespaceURI(namespaceURI);
+        if (params != null) {
+            Node node = (Node)NodeOverNodeInfo.wrap(params);
+            if (node.getNodeType() == Node.DOCUMENT_NODE) {
+                mc.setParams(((Document)node).getDocumentElement());
+            } else {
+                mc.setParams((Element)node);
+            }
+        }
+        if (parserInstruction != null) {
+            Node node = (Node)NodeOverNodeInfo.wrap(parserInstruction);
+            if (node.getNodeType() == Node.DOCUMENT_NODE) {
+                mc.setParserInstruction(((Document)node).getDocumentElement());
+            } else {
+                mc.setParserInstruction((Element)node);
+            }
+            mc.setPassThrough(Boolean.parseBoolean(passThrough));
+        }
+        mc.setCallId(callId);
+        return "";
+    }
 
 
 //    File getDir(String dirname) throws ServletException {
@@ -98,7 +176,7 @@ public class TestServlet extends HttpServlet {
 //        }
 //        return dir;
 //    }
-
+*/
     /**
      * Generates executable test suites from available CTL sources.
      */
@@ -107,6 +185,8 @@ public class TestServlet extends HttpServlet {
             conf = new Config();
 
             DB = DocumentBuilderFactory.newInstance().newDocumentBuilder();
+            
+            identityTransformer = TransformerFactory.newInstance().newTransformer();
 
 //            File logsDir = new File(System.getProperty("catalina.base"), "logs");
 
@@ -126,7 +206,7 @@ public class TestServlet extends HttpServlet {
 
             for (Entry<String, List<File>> sourceEntry : conf.getSources().entrySet()) {
                 String sourcesName = sourceEntry.getKey();
-                logger.info("TestServlet - Processing Test Suite: " + sourcesName);
+//              System.out.println("TestServlet: " + sourcesName);
                 SetupOptions setupOpts = new SetupOptions();
                 setupOpts.setWorkDir(conf.getWorkDir());
                 setupOpts.setSourcesName(sourcesName);
@@ -137,17 +217,14 @@ public class TestServlet extends HttpServlet {
                 indexes.put(sourcesName, index);
                 
                 for (File ctlFile: index.getDependencies()) {
-                   String encodedName = URLEncoder.encode(ctlFile.getAbsolutePath(), "UTF-8");
-                   encodedName = encodedName.replace('%', '~');  // In Java 5, the Document.parse function has trouble with the URL % encoding
-                   System.out.println("encodedName name "+encodedName);
-                       
+                    String encodedName = URLEncoder.encode(ctlFile.getAbsolutePath(), "UTF-8");
+                  //  encodedName = encodedName.replace('%', '~');  // In Java 5, the Document.parse function has trouble with the URL % encoding
                     String basename = encodedName;
                     int i = basename.lastIndexOf('.');
                     if (i > 0) {
                         basename = basename.substring(0, i);
                     }
-                 //   File indexFile = new File(new File(conf.getWorkDir(), encodedName), "index.xml"); [LB 2011-04-12] //issue with getting double folder path and not being able to find the test scripts
-                    File indexFile = new File(encodedName, "index.xml");
+                    File indexFile = new File(new File(conf.getWorkDir(), encodedName), "index.xml");
                     File htmlFile = new File(listings, basename + ".html");
                     boolean needsGenerating = true;
                     if (htmlFile.exists()) {
@@ -196,7 +273,7 @@ public class TestServlet extends HttpServlet {
             String s = getServletConfig().getInitParameter("cacheSize");
             if (s != null) {
                 cacheSize = Integer.parseInt(s);
-                logger.info("Set cacheSize to " + s);
+                System.out.println("Set cacheSize to " + s);
             }
             engine = new Engine(indexes.values(), classLoaders, cacheSize);
         } catch (ServletException e) {
@@ -206,19 +283,121 @@ public class TestServlet extends HttpServlet {
         }
     }
 
-    public void doGet(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException {
-        processFormData(request, response);
+    public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException {
+/*
+    	String pathinfo = request.getPathInfo();
+        if (pathinfo != null && request.getPathInfo().indexOf("/monitor/") >= 0) {
+            processMonitor(request, response, false);
+        } else {
+            process(request, response);
+        }
+*/
+        process(request, response);
     }
 
-    public void doPost(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException {
-        processFormData(request, response);
+    public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException {
+/*
+    	if (request.getPathInfo().indexOf("/monitor/") >= 0) {
+            processMonitor(request, response, true);
+        } else {
+            process(request, response);
+        }
+*/
+        process(request, response);
     }
+/*
+    public void processMonitor(HttpServletRequest request, HttpServletResponse response, boolean post) throws ServletException {
+        try {
+            String uri = request.getRequestURL().toString();
+            MonitorCall mc = monitors.get(uri);
+            TECore core = mc.getCore();
 
-    // Parse data for POST/GET method and process it accordingly
-    public void processFormData(HttpServletRequest request,
-            HttpServletResponse response) throws ServletException {
+            String url = mc.getUrl();
+            String queryString = request.getQueryString();
+            if (queryString != null) {
+                if (url.contains("?")) {
+                    url += queryString;
+                } else {
+                    url += "?" + queryString;
+                }
+            }
+            
+            HttpURLConnection huc = (HttpURLConnection)(new URL(url).openConnection());
+            CachedHttpURLConnection uc = new CachedHttpURLConnection(huc);
+            
+            String method = request.getMethod();
+            uc.setRequestMethod(method);
+            uc.setDoInput(true);
+            uc.setDoOutput(post);
+
+            Enumeration requestHeaders = request.getHeaderNames();
+            while (requestHeaders.hasMoreElements()) {
+                String key = (String)requestHeaders.nextElement();
+                uc.setRequestProperty(key, request.getHeader(key));
+            }
+            
+            byte[] data = null;
+            if (post) {
+                ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                copy_stream(request.getInputStream(), baos);
+                data = baos.toByteArray();
+                ByteArrayInputStream bais = new ByteArrayInputStream(data);
+                copy_stream(bais, uc.getOutputStream());
+            }
+            
+            Document doc = DB.newDocument();
+            Element eRequest = encodeRequest(request, doc, data);
+            Element parserInstruction = mc.getParserInstruction();
+            Element eResponse = core.parse(uc, parserInstruction);
+            
+            Map<String, List<String>> responseHeaders = uc.getHeaderFields();
+            for (Entry<String, List<String>> entry : responseHeaders.entrySet()) {
+                if (entry.getKey() != null && !entry.getKey().equals("")) {
+                    for (String value: entry.getValue()) {
+                        response.setHeader(entry.getKey(), value);
+                    }
+                }
+            }
+            
+            if (mc.isPassThrough()) {
+            	identityTransformer.transform(new DOMSource(eResponse), new StreamResult(response.getOutputStream()));
+            } else {
+            	copy_stream(uc.getInputStream(), response.getOutputStream());
+            }
+
+            if (mc.getCallId() != null) {
+            	identityTransformer.transform(new DOMSource(mc.getParams()), new DOMResult(doc));
+                Element eParams = DomUtils.getElementByTagName(doc, "params");
+                Element eReqParam = doc.createElement("param");
+                eReqParam.setAttribute("local-name", "request");
+                eReqParam.setAttribute("namespace-uri", "");
+                eReqParam.setAttribute("prefix", "");
+                eReqParam.setAttribute("type", "node()");
+                Element eReqValue = doc.createElement("value");
+                eReqValue.appendChild(eRequest);
+                eReqParam.appendChild(eReqValue);
+                eParams.appendChild(eReqParam);
+                Element eRespParam = doc.createElement("param");
+                eRespParam.setAttribute("local-name", "response");
+                eRespParam.setAttribute("namespace-uri", "");
+                eRespParam.setAttribute("prefix", "");
+                eRespParam.setAttribute("type", "node()");
+                Element eRespValue = doc.createElement("value");
+                identityTransformer.transform(new DOMSource(eResponse), new DOMResult(eRespValue));
+                eRespParam.appendChild(eRespValue);
+                eParams.appendChild(eRespParam);
+                net.sf.saxon.s9api.DocumentBuilder builder = core.getEngine().getBuilder();
+                XdmNode paramsNode = builder.build(new DOMSource(doc));
+                monitorCallSeq++;
+                String callId = mc.getCallId() + "_" + Integer.toString(monitorCallSeq);
+                core.callTest(mc.getContext(), mc.getLocalName(), mc.getNamespaceURI(), paramsNode.getUnderlyingNode(), callId);
+            }
+        } catch (Throwable t) {
+            throw new ServletException(t);
+        }
+    }
+*/
+    public void process(HttpServletRequest request, HttpServletResponse response) throws ServletException {
         try {
             FileItemFactory ffactory;
             ServletFileUpload upload;
@@ -313,14 +492,18 @@ public class TestServlet extends HttpServlet {
 //                String contextPath = requestURI.substring(0, requestURI.indexOf(request.getServletPath()) + 1);
 //                URI contextURI = new URI(request.getScheme(), null, request.getServerName(), request.getServerPort(), contextPath, null, null);
                 URI contextURI = new URI(request.getScheme(), null, request.getServerName(), request.getServerPort(), request.getRequestURI(), null, null);
-               String contextURIString  = new URL(contextURI.toURL(), webdir + "/").toString();
-                opts.setBaseURI(contextURIString);
-                System.out.println("contextURIString "+contextURIString);
+                if (webdir == null) {
+                    webdir = ".";
+                }
+                opts.setBaseURI(new URL(contextURI.toURL(), webdir + "/").toString());
 //                URI baseURI = new URL(contextURI.toURL(), webdir).toURI();
 //                String base = baseURI.toString() + URLEncoder.encode(webdir, "UTF-8") + "/";
 //                opts.setBaseURI(base);
 //System.out.println(opts.getSourcesName());
                 TECore core = new TECore(engine, indexes.get(opts.getSourcesName()), opts);
+                String servletURL = request.getRequestURL().toString();
+                core.setTestServletURL(servletURL);
+                MonitorServlet.setBaseServletURL(servletURL.substring(0, servletURL.lastIndexOf('/')));
 //System.out.println(indexes.get(opts.getSourcesName()).toString());
                 ByteArrayOutputStream baos = new ByteArrayOutputStream();
                 PrintStream ps = new PrintStream(baos);
@@ -415,11 +598,63 @@ public class TestServlet extends HttpServlet {
                 response.setContentType("text/html");
                 out.println("<html>");
                 out.println("<head><title>Form Submitted</title></head>");
-                out.print("<body onload=\"window.parent.update()\"></body>");
+                out.print("<body onload=\"window.parent.formSubmitted()\"></body>");
                 out.println("</html>");
             }
         } catch (Throwable t) {
             throw new ServletException(t);
         }
     }
+/*
+    Element encodeRequest(HttpServletRequest request, Document doc, byte[] data) throws Exception {
+        Element eRequest = doc.createElementNS(CTL_NS, "ctl:request");
+        Element eURL = doc.createElementNS(CTL_NS, "ctl:url");
+        eURL.setTextContent(request.getRequestURL() + request.getPathInfo());
+        eRequest.appendChild(eURL);
+        Element eMethod = doc.createElementNS(CTL_NS, "ctl:method");
+        eMethod.setTextContent(request.getMethod());
+        eRequest.appendChild(eMethod);
+        Enumeration requestHeaders = request.getHeaderNames();
+        while (requestHeaders.hasMoreElements()) {
+            String key = (String)requestHeaders.nextElement();
+            Element eHeader = doc.createElementNS(CTL_NS, "ctl:header");
+            eHeader.setAttribute("name", key);
+            eHeader.setTextContent(request.getHeader(key));
+            eRequest.appendChild(eHeader);
+        }
+        Enumeration params = request.getParameterNames();
+        while (params.hasMoreElements()) {
+            String key = (String)params.nextElement();
+            Element eParam = doc.createElementNS(CTL_NS, "ctl:param");
+            eParam.setAttribute("name", key);
+            eParam.setTextContent(request.getParameter(key));
+            eRequest.appendChild(eParam);
+        }
+        if (data != null) {
+            String mime = request.getContentType();
+            if (mime.indexOf("text/xml") == 0 || mime.indexOf("application/xml") == 0) {
+                ByteArrayInputStream bais = new ByteArrayInputStream(data);
+                Element eBody = doc.createElementNS(CTL_NS, "ctl:body");
+                Transformer t = TransformerFactory.newInstance().newTransformer();
+                t.transform(new StreamSource(bais), new DOMResult(eBody));
+                eRequest.appendChild(eBody);
+            } else if (mime.indexOf("text/") == 0) {
+                Element eBody = doc.createElementNS(CTL_NS, "ctl:body");
+                eBody.appendChild(doc.createCDATASection(data.toString()));
+                eRequest.appendChild(eBody);
+            }
+        }
+        return eRequest;
+    }
+
+    static void copy_stream(InputStream in, OutputStream out) throws IOException {
+        int i = in.read();
+        while (i >= 0) {
+                out.write(i);
+                i = in.read();
+        }
+//      in.close();
+//      out.close();
+    }
+*/
 }
