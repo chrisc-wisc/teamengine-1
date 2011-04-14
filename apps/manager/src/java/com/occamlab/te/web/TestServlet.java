@@ -137,9 +137,10 @@ public class TestServlet extends HttpServlet {
                 indexes.put(sourcesName, index);
                 
                 for (File ctlFile: index.getDependencies()) {
-                    String encodedName = URLEncoder.encode(ctlFile.getAbsolutePath(), "UTF-8");
-                   // encodedName = encodedName.replace('%', '~');  // In Java 5, the Document.parse function has trouble with the URL % encoding
-                  
+                   String encodedName = URLEncoder.encode(ctlFile.getAbsolutePath(), "UTF-8");
+                   encodedName = encodedName.replace('%', '~');  // In Java 5, the Document.parse function has trouble with the URL % encoding
+                   System.out.println("encodedName name "+encodedName);
+                       
                     String basename = encodedName;
                     int i = basename.lastIndexOf('.');
                     if (i > 0) {
@@ -312,7 +313,9 @@ public class TestServlet extends HttpServlet {
 //                String contextPath = requestURI.substring(0, requestURI.indexOf(request.getServletPath()) + 1);
 //                URI contextURI = new URI(request.getScheme(), null, request.getServerName(), request.getServerPort(), contextPath, null, null);
                 URI contextURI = new URI(request.getScheme(), null, request.getServerName(), request.getServerPort(), request.getRequestURI(), null, null);
-                opts.setBaseURI(new URL(contextURI.toURL(), webdir + "/").toString());
+               String contextURIString  = new URL(contextURI.toURL(), webdir + "/").toString();
+                opts.setBaseURI(contextURIString);
+                System.out.println("contextURIString "+contextURIString);
 //                URI baseURI = new URL(contextURI.toURL(), webdir).toURI();
 //                String base = baseURI.toString() + URLEncoder.encode(webdir, "UTF-8") + "/";
 //                opts.setBaseURI(base);
