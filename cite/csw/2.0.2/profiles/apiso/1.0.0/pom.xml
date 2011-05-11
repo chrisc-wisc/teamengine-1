@@ -11,8 +11,9 @@
   <dependencies>
   	<dependency>
   		<groupId>org.opengeospatial</groupId>
-  		<artifactId>team-engine</artifactId>
+  		<artifactId>team-unit</artifactId>
   		<version>3.0-pre1-SNAPSHOT</version>
+  		<scope>test</scope>
   	</dependency>
   	<!-- dependency>
   		<groupId>org.jvnet.ogc</groupId>

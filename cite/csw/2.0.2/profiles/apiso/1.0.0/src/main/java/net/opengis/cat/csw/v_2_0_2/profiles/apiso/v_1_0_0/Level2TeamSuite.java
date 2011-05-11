@@ -1,6 +1,6 @@
 package net.opengis.cat.csw.v_2_0_2.profiles.apiso.v_1_0_0;
 
-import com.occamlab.te.AbstractTeamSuite;
+import net.disy.te.testing.AbstractTeamSuite;
 
 public class Level2TeamSuite extends AbstractTeamSuite {
 

@@ -42,6 +42,9 @@
 			<call-test name="csw:level1.1">
 				<with-param name="csw.GetCapabilities.document" select="$csw.GetCapabilities.document" />
 			</call-test>
+			<call-test name="csw:level1.2">
+				<with-param name="csw.GetCapabilities.document" select="$csw.GetCapabilities.document" />
+			</call-test>
 		</code>
 	</test>
 </package>
