@@ -52,7 +52,7 @@ public class Generator {
 	// of metadata about the CTL objects
 	private static Logger logger = Logger.getLogger("com.occamlab.te.Generator");
 
-	public static Index generateXsl(SetupOptions opts) throws Exception {
+	public Index generateXsl(SetupOptions opts) throws Exception {
 		InputStream is = null;
 		try {
 			Index masterIndex = new Index();
@@ -189,7 +189,7 @@ public class Generator {
 		}
 	}
 
-	private static Index generate(SetupOptions opts, URL sourceFile, Validator ctl_validator,
+	private Index generate(SetupOptions opts, URL sourceFile, Validator ctl_validator,
 			CtlErrorHandler validation_eh, XsltTransformer generatorTransformer, File workingDir, File indexFile)
 			throws Exception {
 		InputStream in = null;

@@ -53,7 +53,7 @@ public class ListSuites {
             return;
         }
 
-        Index index = Generator.generateXsl(setupOpts);
+        Index index = new Generator().generateXsl(setupOpts);
         
         for (String suiteId : index.getSuiteKeys()) {
             SuiteEntry suite = index.getSuite(suiteId);

@@ -246,7 +246,7 @@ public class Test {
         	return;
         }
         if (mode == TEST_MODE || mode == CHECK_MODE) {
-            masterIndex = Generator.generateXsl(setupOpts);
+            masterIndex = new Generator().generateXsl(setupOpts);
             if (indexFile != null) {
                 masterIndex.persist(indexFile);
             }

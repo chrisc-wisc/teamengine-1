@@ -167,7 +167,7 @@ public class TestServlet extends HttpServlet {
 				for (File source : sourceEntry.getValue()) {
 					setupOpts.addSource(source);
 				}
-				Index index = Generator.generateXsl(setupOpts);
+				Index index = new Generator().generateXsl(setupOpts);
 				indexes.put(sourcesName, index);
 
 				for (URL ctlFile : index.getDependencies()) {
