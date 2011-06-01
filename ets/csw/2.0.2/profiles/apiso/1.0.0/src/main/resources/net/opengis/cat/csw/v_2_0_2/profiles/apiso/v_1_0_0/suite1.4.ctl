@@ -8,7 +8,7 @@
 	xmlns:xi="http://www.w3.org/2001/XInclude" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
 
 
-	<suite name="csw:csw_2.0.2_ap_iso_1.0">
+	<suite name="csw:csw_2.0.2_ap_iso_1.0_level_1.4">
 		<title>CSW 2.0.2 AP ISO 1.0 Compliance Test Suite</title>
 		<description>
 			Validates a CSW 2.0.2 catalogue implementation against the ISO 1.0

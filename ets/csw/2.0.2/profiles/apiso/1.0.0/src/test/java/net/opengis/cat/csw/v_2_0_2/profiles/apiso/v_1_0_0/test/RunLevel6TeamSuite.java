@@ -12,7 +12,7 @@ import org.junit.Test;
 import org.xml.sax.SAXException;
 
 
-public class Level6TeamSuiteTest {
+public class RunLevel6TeamSuite {
 
 	// @Ignore
 	@Test
