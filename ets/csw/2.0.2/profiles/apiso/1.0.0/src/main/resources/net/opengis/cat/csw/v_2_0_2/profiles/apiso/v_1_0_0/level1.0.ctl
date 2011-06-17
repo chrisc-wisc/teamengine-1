@@ -14,6 +14,7 @@
    xmlns:xlink="http://www.w3.org/1999/xlink"
    xmlns:xi="http://www.w3.org/2001/XInclude">
 
+  <!-- shouldn't this read 'name="csw:level1.0"'? - Lorenzo Bigagli -->
   <test name="csw:level1.1">
     <param name="csw.GetCapabilities.document"/>
     <assertion>Run tests for level 1.0 compliance.</assertion>
