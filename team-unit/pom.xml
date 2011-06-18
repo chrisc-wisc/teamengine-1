@@ -6,7 +6,7 @@
 	<artifactId>team-unit</artifactId>
 	<packaging>jar</packaging>
 	<version>3.0-pre1-SNAPSHOT</version>
-	<name>TEAM manager</name>
+	<name>TEAM unit</name>
 	<url>http://www.opengeospatial.org</url>
 
 	<repositories>
