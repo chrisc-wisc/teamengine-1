@@ -23,6 +23,22 @@ public abstract class AbstractTeamSuite implements TeamSuite {
 		}
 		this.resourceNames = Collections.unmodifiableList(draftResourceNames);
 	}
+	
+	/**
+	 * @param resourceBase the base resource location
+	 * @param resourceNames the resource names
+	 */
+	public AbstractTeamSuite(String resourceBase, String[] resourceNames) {
+		Validate.noNullElements(resourceNames);
+
+		final List<String> draftResourceNames = new ArrayList<String>(
+				resourceNames.length);
+
+		for (String localResourceName : resourceNames) {
+			draftResourceNames.add(resourceBase + '/' + localResourceName);
+		}
+		this.resourceNames = Collections.unmodifiableList(draftResourceNames);
+	}
 
 	@Override
 	public List<String> getResourceNames() {
