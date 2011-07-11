@@ -21,7 +21,7 @@ public class Level0TeamSuiteTest {
 		final Map<String, String> params = new HashMap<String, String>();
 		params.put(
 				"csw.capabilities.url",
-				"http://gdi-de.sdisuite.de:8080/soapServices/CSWStartup?request=GetCapabilities&service=CSW");
+				"http://pan.pin.unifi.it:8081/GI-cat/services/cswiso?service=CSW&version=2.0.2&request=GetCapabilities");
 
 		new TeamSuiteExecutor(teamSuite).execute(params);
 	}
