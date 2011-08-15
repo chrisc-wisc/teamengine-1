@@ -160,7 +160,7 @@
                                 <ctl:with-param name="exceptionReportSchemaType" select="$exceptionReportSchemaType" />
 								<ctl:with-param name="PostEncodingIsSOAP" select="$PostEncodingIsSOAP"/>
                             </ctl:call-test>
-                            <!--Version negotiation failed-->
+                            <!--Version negotiation failed  !!!Same to AcceptVersions.3 so Skip this test!!!
                             <ctl:message>**********************************************************************</ctl:message>
                             <ctl:call-test name="owsTests:ows-OWS.GetCapabilities-Exceptions.3">
                                 <ctl:with-param name="serviceURL" select="$serviceURL"/>
@@ -169,7 +169,7 @@
                                 <ctl:with-param name="exceptionReportSchemaLocation" select="$exceptionReportSchemaLocation" />
                                 <ctl:with-param name="exceptionReportSchemaType" select="$exceptionReportSchemaType" />
 								<ctl:with-param name="PostEncodingIsSOAP" select="$PostEncodingIsSOAP"/>
-                            </ctl:call-test>
+                            </ctl:call-test>-->
                             <!--Invalid update sequence-->
                             <xsl:if test="not(string($capabilitiesDocument//@updateSequence)='')">
                                 <ctl:message>**********************************************************************</ctl:message>
@@ -923,7 +923,7 @@
 		</code>
 	</test>
 	
-	<test name="owsTests:ows-OWS.GetCapabilities-Exceptions.3"><!-- CHECK OK -->
+	<test name="owsTests:ows-OWS.GetCapabilities-Exceptions.3"><!-- Same to AcceptVersions.3 so Skip this test -->
       <param name="serviceURL"/>
       <param name="serviceType"/>
       <param name="serviceVersion" />
@@ -1228,8 +1228,14 @@
                   <ctl:fail/>
               </xsl:when>
               <xsl:otherwise>
-                <ctl:message>Getting the sections of the Capabilities document...</ctl:message>
-                <xsl:for-each select="$response/*/*">
+                <ctl:message>Getting the sections of the Capabilities document.</ctl:message>
+				<xsl:variable name="sections" select="$response/*/*" />
+				<xsl:if test="boolean($sections)">
+					<ctl:message>FAILURE:  There should be no element in the returned Capabilities element of the response.</ctl:message>
+                    <ctl:fail/>
+				</xsl:if>
+                <!--
+				<xsl:for-each select="$response/*/*">
                     <xsl:variable name="sectionName" select="local-name-from-QName(node-name(.))" />
                     <ctl:message>Testing the "<xsl:value-of select="$sectionName" />" section...</ctl:message>
                     <xsl:if test="count(index-of($response//ows:OperationsMetadata/ows:Operation[@name='GetCapabilities']/ows:Parameter[@name='Sections']//ows:Value,$sectionName))>0">
@@ -1237,6 +1243,7 @@
                         <ctl:fail/>
                     </xsl:if>
                 </xsl:for-each>
+				-->
               </xsl:otherwise>
             </xsl:choose>
 		</code>
