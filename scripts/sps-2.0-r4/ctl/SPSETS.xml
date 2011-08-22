@@ -70,7 +70,7 @@
 								<td align="center">
 									<input name="service-url" size="128" 
 									type="text" 
-									value="http://localhost:4644/SPStemp/SPS.ashx"/>
+									value="http://140.134.48.12/sps/SPS.ashx"/>
 								</td>
 							</tr>
 							</table>
@@ -176,7 +176,7 @@
 						<ctl:with-param name="GetCapabilities_GET" select="$GetCapabilities_GET" />
 					</ctl:call-test>
 					<ctl:call-test name="sps:general-main">
-						<ctl:with-param name="serviceURL" select="$serviceURL" />
+						<ctl:with-param name="serviceURL" select="$Submit_URL" /><!-- Use Submit_Url to test general-->
 						<ctl:with-param name="PostEncodingIsSOAP" select="$PostEncodingIsSOAP" />
 						<ctl:with-param name="GetCapabilities_GET" select="$GetCapabilities_GET" />
 					</ctl:call-test>
@@ -276,55 +276,47 @@
 				3.)  If the response validates, then check that the exceptionCode value is "InvalidRequest"
 				-->
 				<ctl:message>Issuing an invalid request to:  <xsl:value-of select="$serviceURL" /></ctl:message>
-				<!--<xsl:variable name="body" select="string('Test')" />-->
-				<xsl:variable name="invalidRequestResponse">
-					<xsl:if test="$PostEncodingIsSOAP=string('true')">
-						<ctl:soap-request version="1.2" charset="UTF-8">
-							<ctl:url>
-								<xsl:value-of select="$serviceURL"/>
-							</ctl:url> 
-							<ctl:body>
-								<SUBMIT service="SPS" version="2.0.0" />
-							</ctl:body>
-							<ctl:call-function name="spsFunctions:validateExceptionReportSOAP" />
-						</ctl:soap-request>
-					</xsl:if>
-					<xsl:if test="not($PostEncodingIsSOAP=string('true'))">
+				<xsl:if test="$PostEncodingIsSOAP=string('true')">
+					<ctl:message>Skip "InvalidRequest" Exception Test because CTL cannot send InvalidRequest body with soap-binding.</ctl:message>
+				</xsl:if>
+				<xsl:if test="not($PostEncodingIsSOAP=string('true'))">
+					<xsl:variable name="invalidRequestResponse">
 						<ctl:request>
 							<ctl:url>
 								<xsl:value-of select="$serviceURL" />
 							</ctl:url>
 							<ctl:method>post</ctl:method>
 							<ctl:body>
-								invalid request
+								<![CDATA[invalid request]]>
 							</ctl:body>
 							<ctl:call-function name="spsFunctions:validateExceptionReport" />
 						</ctl:request>
-					</xsl:if>
-				</xsl:variable>
-				<xsl:choose>
-					<xsl:when test="not($invalidRequestResponse/*)">
-						<ctl:message>FAILURE:  The server did not return a response to an invalid request, or the response from the server was not a valid exception report.  The response from the server was:  "<xsl:value-of select="$invalidRequestResponse/*" />"</ctl:message>
-						<ctl:fail />
-					</xsl:when>
-					<xsl:otherwise>
-						<ctl:message>The response was:  <xsl:value-of select="spsFunctions:getExceptionInfo($invalidRequestResponse)" /></ctl:message>
-						<ctl:message>Checking the validity of the response to an invalid request.</ctl:message>
-						<xsl:variable name="isCorrect">
-							<ctl:call-function name="spsFunctions:checkExceptionReport">
-								<ctl:with-param name="exceptionReport" select="$invalidRequestResponse" />
-								<ctl:with-param name="exceptionCodeToCheck" select="string('InvalidRequest')" />
-								<ctl:with-param name="locatorToCheck" select="string('*')" />
-								<ctl:with-param name="PostEncodingIsSOAP" select="$PostEncodingIsSOAP" />
-							</ctl:call-function>
-						</xsl:variable>
-						<ctl:message>The validity check returned:  <xsl:value-of select="$isCorrect" /></ctl:message>
-						<xsl:if test="not(xsd:boolean($isCorrect))">
-							<ctl:message>FAILURE:  The response to an invalid request was expected to be an exception report with an exceptionCode of "InvalidRequest" and a locator value containing the validation issue.  The returned exception report was:  "<xsl:value-of select="$invalidRequestResponse/*" />"</ctl:message>
+					</xsl:variable>
+					<!-- We Cannot send InvalidRequest body because soap-request don't allow it. -->
+					<xsl:choose>
+						<xsl:when test="not($invalidRequestResponse/*)">
+							<ctl:message>FAILURE:  The server did not return a response to an invalid request, or the response from the server was not a valid exception report.  The response from the server was:  "<xsl:value-of select="$invalidRequestResponse/*" />"</ctl:message>
 							<ctl:fail />
-						</xsl:if>
-					</xsl:otherwise>
-				</xsl:choose>
+						</xsl:when>
+						<xsl:otherwise>
+							<ctl:message>The response was:  <xsl:value-of select="spsFunctions:getExceptionInfo($invalidRequestResponse)" /></ctl:message>
+							<ctl:message>Checking the validity of the response to an invalid request.</ctl:message>
+							<xsl:variable name="isCorrect">
+								<ctl:call-function name="spsFunctions:checkExceptionReport">
+									<ctl:with-param name="exceptionReport" select="$invalidRequestResponse" />
+									<ctl:with-param name="exceptionCodeToCheck" select="string('InvalidRequest')" />
+									<ctl:with-param name="locatorToCheck" select="string('*')" />
+									<ctl:with-param name="PostEncodingIsSOAP" select="$PostEncodingIsSOAP" />
+								</ctl:call-function>
+							</xsl:variable>
+							<ctl:message>The validity check returned:  <xsl:value-of select="$isCorrect" /></ctl:message>
+							<xsl:if test="not(xsd:boolean($isCorrect))">
+								<ctl:message>FAILURE:  The response to an invalid request was expected to be an exception report with an exceptionCode of "InvalidRequest" and a locator value containing the validation issue.  The returned exception report was:  "<xsl:value-of select="$invalidRequestResponse/*" />"</ctl:message>
+								<ctl:fail />
+							</xsl:if>
+						</xsl:otherwise>
+					</xsl:choose>
+				</xsl:if>
 			</ctl:code>
 		</ctl:test>
 		<ctl:test name="sps:general-SPS.General-ValidResponse.1">
@@ -714,6 +706,7 @@
 		<ctl:test name="sps:core-SPS.GetCapabilities-KVPRequestRequestParameterHandling.1">
 			<ctl:param name="serviceURL" />
 			<ctl:param name="PostEncodingIsSOAP" />
+			<ctl:param name="GetCapabilities_GET" />
 			<ctl:assertion>The server returns a valid error report message with an exception code of InvalidParameterValue or OperationNotSupported when the request key value is not GetCapabilities. </ctl:assertion>
 			<ctl:comment>Pass if the exception report is valid and the exceptionCode parameter contains InvalidParameterValue or OperationNotSupported; fail otherwise.</ctl:comment>
 			<ctl:link title="Verify that the server handles invalid request key values correctly.">docs/SPS%202.0%20ATS.html#SPS.GetCapabilities-KVPRequestRequestParameterHandling</ctl:link>
@@ -725,21 +718,50 @@
 				<xsl:variable name="invalidRequestParameterValue" select="string('lkasjflksadjflkjasdf')" />
 				<ctl:message>Issuing a GetCapabilities request with an invalid request value of "<xsl:value-of select="$invalidRequestParameterValue" />"</ctl:message>
 				<xsl:variable name="requestInvalidRequestKeyValue">
-					<ctl:request>
-						<ctl:url>
-							<xsl:value-of select="$serviceURL" />
-						</ctl:url>
-						<ctl:method>get</ctl:method>
-						<ctl:param name="request"><xsl:value-of select="$invalidRequestParameterValue" /></ctl:param>
-						<ctl:param name="service">SPS</ctl:param>
-						<!--Parser to get response-->
-						<xsl:if test="$PostEncodingIsSOAP=string('true')">
+					<xsl:if test="$PostEncodingIsSOAP=string('true')">
+						<ctl:soap-request version="1.2" charset="UTF-8">
+							<ctl:url>
+								<xsl:value-of select="$serviceURL"/>
+							</ctl:url>
+							<ctl:body>
+								<lkasjflksadjflkjasdf service="SPS" version="2.0.0"
+									xmlns:soap12="http://www.w3.org/2003/05/soap-envelope" 
+									xsi:schemaLocation="http://www.w3.org/2003/05/soap-envelope http://www.w3.org/2003/05/soap-envelope/soap-envelope.xsd http://www.opengis.net/sps/2.0 http://schemas.opengis.net/sps/2.0/sps.xsd" 
+									xmlns:sps="http://www.opengis.net/sps/2.0" 
+									xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"></lkasjflksadjflkjasdf>
+							</ctl:body>
 							<ctl:call-function name="spsFunctions:validateExceptionReportSOAP" />
+						</ctl:soap-request>
+					</xsl:if>
+					<xsl:if test="not($PostEncodingIsSOAP=string('true'))">
+						<xsl:if test="$GetCapabilities_GET">
+							<ctl:request>
+								<ctl:url>
+									<xsl:value-of select="$serviceURL" />
+								</ctl:url>
+								<ctl:method>get</ctl:method>
+								<ctl:param name="request"><xsl:value-of select="$invalidRequestParameterValue" /></ctl:param>
+								<ctl:param name="service">SPS</ctl:param>
+								<ctl:call-function name="spsFunctions:validateExceptionReport" />
+							</ctl:request>
 						</xsl:if>
-						<xsl:if test="not($PostEncodingIsSOAP=string('true'))">
-							<ctl:call-function name="spsFunctions:validateExceptionReport" />
+						<xsl:if test="not($GetCapabilities_GET)">
+							<ctl:request>
+								<ctl:url>
+									<xsl:value-of select="$serviceURL" />
+								</ctl:url>
+								<ctl:method>post</ctl:method>
+								<ctl:body>
+									<lkasjflksadjflkjasdf service="SPS" version="2.0.0"
+										xmlns:soap12="http://www.w3.org/2003/05/soap-envelope" 
+										xsi:schemaLocation="http://www.w3.org/2003/05/soap-envelope http://www.w3.org/2003/05/soap-envelope/soap-envelope.xsd http://www.opengis.net/sps/2.0 http://schemas.opengis.net/sps/2.0/sps.xsd" 
+										xmlns:sps="http://www.opengis.net/sps/2.0" 
+										xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"></lkasjflksadjflkjasdf>
+								</ctl:body>
+								<ctl:call-function name="spsFunctions:validateExceptionReport" />
+							</ctl:request>
 						</xsl:if>
-					</ctl:request>
+					</xsl:if>
 				</xsl:variable>
 				<ctl:message>The server returned the following response:  <xsl:value-of select="$requestInvalidRequestKeyValue/*" /></ctl:message>
 				<xsl:choose>
