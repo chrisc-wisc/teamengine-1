@@ -26,7 +26,7 @@
 			<ctl:param name="getObservationVersion"/>
 			<ctl:param name="responseFormat"/>					
 			<ctl:param name="observedProperty"/>
-			<!-- <ctl:param name="offeringId"></ctl:param> need gml:name URN to get observation PwD 2010-12-21 -->
+			<ctl:param name="offeringId"></ctl:param> <!-- Rocky change 2011-09-05,need gml:name URN to get observation PwD 2010-12-21 -->
 			<ctl:param name="offeringName"></ctl:param>
 			<ctl:assertion>An invalid srsName in the request produces a valid error message.</ctl:assertion>
 			<ctl:comment>Check that an invalid srsName in the request produces a valid error message.  Pass if an invalid srsName produces a valid error message; fail otherwise.</ctl:comment>
@@ -58,7 +58,7 @@
 									<xsl:attribute name="srsName">
 										<xsl:value-of select="$invalidSRSName"/>
 									</xsl:attribute>									
-									<offering><xsl:value-of select="$offeringName"/></offering> <!--  was offeringId PwD 2010-12-21 -->
+									<offering><xsl:value-of select="$offeringId"/></offering> <!--  was offeringName Rocky change 2011-09-05,was offeringId PwD 2010-12-21 -->
 									<observedProperty>
 										<xsl:value-of select="$observedProperty"/>
 									</observedProperty>
@@ -220,22 +220,22 @@
 									<xsl:copy-of select="sosFunctions:getObservationByTimeInstant
 														($postURL, 
 														$getObservationVersion, 
-														$offeringName, 
+														$offeringId, 
 														$invalidDate, 
 														$observedProperty, 
 														$responseFormat,
-														$exceptionReportSchema)"/> <!-- offeringName was offeringId PwD 2010-12-21 -->
+														$exceptionReportSchema)"/> <!-- offeringId was offeringName Rocky change 2011-09-05,was offeringId PwD 2010-12-21 -->
 								</xsl:when>
 								<xsl:otherwise>
 									<xsl:copy-of select="sosFunctions:getObservationByTimePeriod
 														($postURL, 
 														$getObservationVersion, 
-														$offeringName, 
+														$offeringId, 
 														$invalidDate, 
 														$endPosition, 
 														$observedProperty, 
 														$responseFormat,
-														$exceptionReportSchema)"/>	<!--  offeringName was offeringId PwD 2010-12-21 -->							
+														$exceptionReportSchema)"/>	<!--  offeringId was offeringName Rocky change 2011-09-05,was offeringId PwD 2010-12-21 -->							
 								</xsl:otherwise>
 							</xsl:choose>
 						</xsl:variable>						
@@ -279,7 +279,7 @@
 			<ctl:param name="getObservationVersion"/>
 			<ctl:param name="responseFormat"/>					
 			<ctl:param name="observedProperty"/>
-			<!-- <ctl:param name="offeringId"></ctl:param> need gml:name URN to get observation PwD 2010-12-21 -->
+			<ctl:param name="offeringId"></ctl:param> <!-- Rocky change 2011-09-05,need gml:name URN to get observation PwD 2010-12-21 -->
 			<ctl:param name="offeringName"></ctl:param>
 			<ctl:assertion>An invalid procedure in the request produces a valid error message.</ctl:assertion>
 			<ctl:comment>Check that an invalid procedure in the request produces a valid error message.  Pass if an invalid procedure in the request produces a valid error message; fail otherwise.</ctl:comment>
@@ -309,7 +309,7 @@
 										<xsl:value-of select="$getObservationVersion"/>										
 									</xsl:attribute>									
 									<offering>
-										<xsl:value-of select="$offeringName"/> <!--  was offeringId PwD 2010-12-21 -->
+										<xsl:value-of select="$offeringId"/> <!--  was offeringName Rocky change 2011-09-05,was offeringId PwD 2010-12-21 -->
 									</offering>
 									<procedure>
 										<xsl:value-of select="$invalidProcedure"/>
@@ -367,7 +367,7 @@
 			<ctl:param name="postURL"/>
 			<ctl:param name="getObservationVersion"/>
 			<ctl:param name="responseFormat"/>					
-			<!-- <ctl:param name="offeringId"></ctl:param> need gml:name URN to get observation PwD 2010-12-21 -->
+			<ctl:param name="offeringId"></ctl:param> <!-- Rocky change 2011-09-05,need gml:name URN to get observation PwD 2010-12-21 -->
 			<ctl:param name="offeringName"></ctl:param>
 			<ctl:assertion>Supplying one or more invalid observedProperty values in the request produces a valid error message.</ctl:assertion>
 			<ctl:comment>Check that supplying one or more invalid observedProperty values in the request produces a valid error message.  Pass if an invalid observedProperty value produces a valid error message; fail otherwise.</ctl:comment>
@@ -397,7 +397,7 @@
 										<xsl:value-of select="$getObservationVersion"/>
 									</xsl:attribute>									
 									<offering>
-										<xsl:value-of select="$offeringName"/> <!--  was offeringId PwD 2010-12-21 -->
+										<xsl:value-of select="$offeringId"/> <!--  was offeringName Rocky change 2011-09-05,was offeringId PwD 2010-12-21 -->
 									</offering>
 									<observedProperty>
 										<xsl:value-of select="$invalidObservedProperty"/>
@@ -456,7 +456,7 @@
 			<ctl:param name="getObservationVersion"/>
 			<ctl:param name="responseFormat"/>					
 			<ctl:param name="observedProperty"/>
-			<!-- <ctl:param name="offeringId"></ctl:param> need gml:name URN to get observation PwD 2010-12-21 -->
+			<ctl:param name="offeringId"></ctl:param> <!-- Rocky change 2011-09-05,need gml:name URN to get observation PwD 2010-12-21 -->
 			<ctl:param name="offeringName"></ctl:param>
 			<ctl:assertion>Supplying one or more invalid featureOfInterest values in the request produces a valid error message.</ctl:assertion>
 			<ctl:comment>Check that supplying one or more invalid featureOfInterest values in the request produces a valid error message.  Pass if one or more invalid featureOfInterest values in the request produces a valid error message; fail otherwise.</ctl:comment>
@@ -486,7 +486,7 @@
 										<xsl:value-of select="$getObservationVersion"/>
 									</xsl:attribute>									
 									<offering>
-										<xsl:value-of select="$offeringName"/> <!--  was offeringId PwD 2010-12-21 -->
+										<xsl:value-of select="$offeringId"/> <!--  was offeringName Rocky change 2011-09-05,was offeringId PwD 2010-12-21 -->
 									</offering>
 									<observedProperty>
 										<xsl:value-of select="$observedProperty"/>
@@ -551,7 +551,7 @@
 			<ctl:param name="getObservationVersion"/>
 			<ctl:param name="responseFormat"/>					
 			<ctl:param name="observedProperty"/>
-			<!-- <ctl:param name="offeringId"></ctl:param> need gml:name URN to get observation PwD 2010-12-21 -->
+			<ctl:param name="offeringId"></ctl:param> <!-- Rocky change 2011-09-05,need gml:name URN to get observation PwD 2010-12-21 -->
 			<ctl:param name="offeringName"></ctl:param>
 			<ctl:assertion>Providing an invalid value in the result field produces a valid error message.</ctl:assertion>
 			<ctl:comment>Check that providing an invalid value in the result field produces a valid error message.  Pass if a valid error message is produced from providing an invalid value in the result field; fail otherwise.</ctl:comment>
@@ -582,7 +582,7 @@
 									<xsl:value-of select="$getObservationVersion"/>
 								</xsl:attribute>									
 								<offering>
-									<xsl:value-of select="$offeringName"/> <!--  was offeringId PwD 2010-12-21 -->
+									<xsl:value-of select="$offeringId"/> <!--  was offeringName Rocky change 2011-09-05,was offeringId PwD 2010-12-21 -->
 								</offering>
 								<observedProperty>
 									<xsl:value-of select="$observedProperty"/>
@@ -650,7 +650,7 @@
 			<ctl:param name="postURL"/>
 			<ctl:param name="getObservationVersion"/>							
 			<ctl:param name="observedProperty"/>
-			<!-- <ctl:param name="offeringId"></ctl:param> need gml:name URN to get observation PwD 2010-12-21 -->
+			<ctl:param name="offeringId"></ctl:param> <!-- Rocky change 2011-09-05,need gml:name URN to get observation PwD 2010-12-21 -->
 			<ctl:param name="offeringName"></ctl:param>
 			<ctl:assertion>Providing an invalid outputFormat value produces a valid error message.</ctl:assertion>
 			<ctl:comment>Check that providing an invalid outputFormat value produces a valid error message.  Pass if an invalid outputFormat produces a valid error message; fail otherwise.</ctl:comment>
@@ -680,7 +680,7 @@
 										<xsl:value-of select="$getObservationVersion"/>
 									</xsl:attribute>									
 									<offering>
-										<xsl:value-of select="$offeringName"/> <!--  was offeringId PwD 2010-12-21 -->
+										<xsl:value-of select="$offeringId"/> <!--  was offeringName Rocky change 2011-09-05,was offeringId PwD 2010-12-21 -->
 									</offering>
 									<observedProperty>
 										<xsl:value-of select="$observedProperty"/>
@@ -737,7 +737,7 @@
 			<ctl:param name="getObservationVersion"/>
 			<ctl:param name="responseFormat"/>					
 			<ctl:param name="observedProperty"/>
-			<!-- <ctl:param name="offeringId"></ctl:param> need gml:name URN to get observation PwD 2010-12-21 -->
+			<ctl:param name="offeringId"></ctl:param> <!-- Rocky change 2011-09-05,need gml:name URN to get observation PwD 2010-12-21 -->
 			<ctl:param name="offeringName"></ctl:param>
 			<ctl:assertion>Providing an invalid resultModel in the request produces a valid error message.</ctl:assertion>
 			<ctl:comment>Check that providing an invalid resultModel in the request produces a valid error message.  Pass if providing an invalid resultModel in the request produces a valid error message; fail otherwise.</ctl:comment>
@@ -767,7 +767,7 @@
 										<xsl:value-of select="$getObservationVersion"/>
 									</xsl:attribute>									
 									<offering>
-										<xsl:value-of select="$offeringName"/> <!--  was offeringId PwD 2010-12-21 -->
+										<xsl:value-of select="$offeringId"/> <!--  was offeringName Rocky change 2011-09-05,was offeringId PwD 2010-12-21 -->
 									</offering>
 
 									<observedProperty>
@@ -828,7 +828,7 @@
 			<ctl:param name="getObservationVersion"/>
 			<ctl:param name="responseFormat"/>					
 			<ctl:param name="observedProperty"/>
-			<!-- <ctl:param name="offeringId"></ctl:param> need gml:name URN to get observation PwD 2010-12-21 -->
+			<ctl:param name="offeringId"></ctl:param> <!-- Rocky change 2011-09-05,need gml:name URN to get observation PwD 2010-12-21 -->
 			<ctl:param name="offeringName"></ctl:param>
 			<ctl:assertion>Providing an invalid responseMode in the request produces a valid error message.</ctl:assertion>
 			<ctl:comment>Check that providing an invalid responseMode in the request produces a valid error message.  Pass if providing an invalid responseMode in the request produces a valid error mesage; fail otherwise.</ctl:comment>
@@ -858,7 +858,7 @@
 										<xsl:value-of select="$getObservationVersion"/>
 									</xsl:attribute>									
 									<offering>
-										<xsl:value-of select="$offeringName"/> <!--  was offeringId PwD 2010-12-21 -->
+										<xsl:value-of select="$offeringId"/> <!--  was offeringName Rocky change 2011-09-05,was offeringId PwD 2010-12-21 -->
 									</offering>
 
 									<observedProperty>
@@ -931,7 +931,7 @@
 						<xsl:for-each select="$capabilitiesDocument//sos:ObservationOffering/@gml:id">
 							<ctl:message select="'****'"/> <!-- moved here from below 2010-12-28 PwD -->
 							<xsl:variable name="offeringId" select="."/>
-							<xsl:variable name="offeringName" select="sosFunctions:capabilitiesOfferingName($capabilitiesDocument, $offeringId)"/> <!-- need gml:name URN to get observation PwD 2010-12-21 -->				
+							<xsl:variable name="offeringName" select="sosFunctions:capabilitiesOfferingName($capabilitiesDocument, $offeringId)"/> <!-- Rocky change 2011-09-05,need gml:name URN to get observation PwD 2010-12-21 -->				
 							<ctl:message select="concat('Offering gml:id: ', $offeringId, ' gml:name: ', $offeringName)"/>
 							<xsl:if test="not($capabilitiesDocument//sos:ObservationOffering[@gml:id=$offeringId]//sos:responseFormat[starts-with(.,'text/xml')])"> <!-- 2010-12-29 PwD -->
 								<ctl:message>Skipped because it is not offered in a text/xml response format</ctl:message>
@@ -967,7 +967,7 @@
 														<xsl:attribute name="srsName">
 															<xsl:value-of select="$srsName"/>
 														</xsl:attribute>									
-														<offering><xsl:value-of select="$offeringName"/></offering> <!--  was offeringId PwD 2010-12-21 -->
+														<offering><xsl:value-of select="$offeringId"/></offering> <!--  was offeringName Rocky change 2011-09-05,was offeringId PwD 2010-12-21 -->
 														<observedProperty>
 															<xsl:value-of select="sosFunctions:observationOfferingObservedProperty($capabilitiesDocument, $offeringId)"/>
 														</observedProperty>
@@ -1051,7 +1051,7 @@
 
 				<xsl:for-each select="$capabilitiesDocument//sos:ObservationOffering/@gml:id">
 					<xsl:variable name="offeringId" select="."/>
-					<xsl:variable name="offeringName" select="sosFunctions:capabilitiesOfferingName($capabilitiesDocument, $offeringId)"/> <!-- need gml:name URN to get observation PwD 2010-12-21 -->
+					<xsl:variable name="offeringName" select="sosFunctions:capabilitiesOfferingName($capabilitiesDocument, $offeringId)"/> <!-- Rocky change 2011-09-05,need gml:name URN to get observation PwD 2010-12-21 -->
 					<ctl:message select="concat('Offering gml:id: ', $offeringId, ' gml:name: ', $offeringName)"/>
 					<xsl:variable name="beginPosition" select="sosFunctions:beginTimePosition($capabilitiesDocument, $offeringId)"/>
 					<xsl:variable name="endPosition" select="sosFunctions:endTimePosition($capabilitiesDocument, $offeringId)"/>	
@@ -1099,8 +1099,8 @@
 												>
 													<xsl:attribute name="version">
 														<xsl:value-of select="$getObservationVersion"/>
-													</xsl:attribute>									
-													<offering><xsl:value-of select="$offeringName"/></offering> <!--  was offeringId PwD 2010-12-21 -->
+													</xsl:attribute>
+													<offering><xsl:value-of select="$offeringId"/></offering> <!--  was offeringName Rocky change 2011-09-05,was offeringId PwD 2010-12-21 -->
 													<procedure>
 														<xsl:value-of select="$procedure"/>
 													</procedure>									
@@ -1201,7 +1201,7 @@
 
 				<xsl:for-each select="$capabilitiesDocument//sos:ObservationOffering/@gml:id">
 					<xsl:variable name="offeringId" select="."/>
-					<xsl:variable name="offeringName" select="sosFunctions:capabilitiesOfferingName($capabilitiesDocument, $offeringId)"/> <!-- need gml:name URN to get observation PwD 2010-12-21 -->				
+					<xsl:variable name="offeringName" select="sosFunctions:capabilitiesOfferingName($capabilitiesDocument, $offeringId)"/> <!-- Rocky change 2011-09-05,need gml:name URN to get observation PwD 2010-12-21 -->				
 					<ctl:message select="'****'"/> <!-- 2010-12-29 PwD -->
 					<ctl:message select="concat('Offering gml:id: ', $offeringId, ' gml:name: ', $offeringName)"/>
 					
@@ -1246,7 +1246,7 @@
 													<xsl:attribute name="version">
 														<xsl:value-of select="$getObservationVersion"/>
 													</xsl:attribute>									
-													<offering><xsl:value-of select="$offeringName"/></offering> <!--  was offeringId PwD 2010-12-21 -->						
+													<offering><xsl:value-of select="$offeringId"/></offering> <!--  was offeringName Rocky change 2011-09-05,was offeringId PwD 2010-12-21 -->						
 													<observedProperty>
 														<xsl:value-of select="$observedProperty"/>
 													</observedProperty>
@@ -1324,7 +1324,7 @@
 
 						<xsl:for-each select="$capabilitiesDocument//sos:ObservationOffering/@gml:id">
 							<xsl:variable name="offeringId" select="."/>
-							<xsl:variable name="offeringName" select="sosFunctions:capabilitiesOfferingName($capabilitiesDocument, $offeringId)"/> <!-- need gml:name URN to get observation PwD 2010-12-21 -->				
+							<xsl:variable name="offeringName" select="sosFunctions:capabilitiesOfferingName($capabilitiesDocument, $offeringId)"/> <!-- Rocky change 2011-09-05,need gml:name URN to get observation PwD 2010-12-21 -->				
 							<ctl:message select="concat('Offering gml:id: ', $offeringId, ' gml:name: ', $offeringName)"/>
 							<xsl:variable name="observedProperty" select="sosFunctions:observationOfferingObservedProperty($capabilitiesDocument, $offeringId)"/>
 							<ctl:message select="concat('Observed Property: ', $observedProperty)"/>
@@ -1364,7 +1364,7 @@
 														<xsl:attribute name="version">
 															<xsl:value-of select="$getObservationVersion"/>
 														</xsl:attribute>									
-														<offering><xsl:value-of select="$offeringName"/></offering> <!--  was offeringId PwD 2010-12-21 -->
+														<offering><xsl:value-of select="$offeringId"/></offering> <!--  was offeringName Rocky change 2011-09-05,was offeringId PwD 2010-12-21 -->
 														<eventTime>
 															<ogc:TM_During>
 																<ogc:PropertyName>urn:ogc:data:time:iso8601</ogc:PropertyName>
@@ -1439,7 +1439,7 @@
 
 						<xsl:for-each select="$capabilitiesDocument//sos:ObservationOffering/@gml:id">
 							<xsl:variable name="offeringId" select="."/>
-							<xsl:variable name="offeringName" select="sosFunctions:capabilitiesOfferingName($capabilitiesDocument, $offeringId)"/> <!-- need gml:name URN to get observation PwD 2010-12-21 -->				
+							<xsl:variable name="offeringName" select="sosFunctions:capabilitiesOfferingName($capabilitiesDocument, $offeringId)"/> <!-- Rocky change 2011-09-05,need gml:name URN to get observation PwD 2010-12-21 -->				
 							<ctl:message select="concat('Offering gml:id: ', $offeringId, ' gml:name: ', $offeringName)"/>
 							<xsl:variable name="observedProperty" select="sosFunctions:observationOfferingObservedProperty($capabilitiesDocument, $offeringId)"/>
 							<ctl:message select="concat('Observed Property: ', $observedProperty)"/>							
@@ -1476,12 +1476,12 @@
 											<xsl:copy-of select="sosFunctions:getObservationByTimePeriod
 																($postURL, 
 																$getObservationVersion, 
-																$offeringName, 
+																$offeringId, 
 																$tooOldBeginPosition, 
 																$tooOldEndPosition, 
 																$observedProperty, 
 																$responseFormat,
-																sosFunctions:schemaPathFromMimeType($ogcSchemaRoot, $responseFormat))"/><!--  was offeringId PwD 2010-12-21 -->
+																sosFunctions:schemaPathFromMimeType($ogcSchemaRoot, $responseFormat))"/><!--  was offeringName Rocky change 2011-09-05,was offeringId PwD 2010-12-21 -->
 										</xsl:variable>		
 
 										<xsl:choose>								
@@ -1509,12 +1509,12 @@
 												<xsl:copy-of select="sosFunctions:getObservationByTimePeriod
 																			($postURL, 
 																			$getObservationVersion, 
-																			$offeringName, 
+																			$offeringId, 
 																			$firstStartPosition, 
 																			$firstThirdPosition, 
 																			$observedProperty, 
 																			$responseFormat,
-																			sosFunctions:schemaPathFromMimeType($ogcSchemaRoot, $responseFormat))"/><!--  was offeringId PwD 2010-12-21 -->
+																			sosFunctions:schemaPathFromMimeType($ogcSchemaRoot, $responseFormat))"/><!--  was offeringName Rocky change 2011-09-05,was offeringId PwD 2010-12-21 -->
 																			
 											</xsl:variable>						
 											<xsl:choose>								
@@ -1542,12 +1542,12 @@
 												<xsl:copy-of select="sosFunctions:getObservationByTimePeriod
 																			($postURL, 
 																			$getObservationVersion, 
-																			$offeringName, 
+																			$offeringId, 
 																			$firstThirdPosition, 
 																			$secondThirdPosition, 
 																			$observedProperty, 
 																			$responseFormat,
-																			sosFunctions:schemaPathFromMimeType($ogcSchemaRoot, $responseFormat))"/><!--  was offeringId PwD 2010-12-21 -->
+																			sosFunctions:schemaPathFromMimeType($ogcSchemaRoot, $responseFormat))"/><!--  was offeringName Rocky change 2011-09-05,was offeringId PwD 2010-12-21 -->
 											</xsl:variable>						
 											<xsl:choose>								
 												<!-- was <xsl:when test="not($getObservation2/*)">  2010-12-18 PwD -->
@@ -1574,12 +1574,12 @@
 												<xsl:copy-of select="sosFunctions:getObservationByTimePeriod
 																			($postURL, 
 																			$getObservationVersion, 
-																			$offeringName, 
+																			$offeringId, 
 																			$secondThirdPosition, 
 																			$lastEndPosition, 
 																			$observedProperty, 
 																			$responseFormat,
-																			sosFunctions:schemaPathFromMimeType($ogcSchemaRoot, $responseFormat))"/><!--  was offeringId PwD 2010-12-21 -->
+																			sosFunctions:schemaPathFromMimeType($ogcSchemaRoot, $responseFormat))"/><!--  was offeringName Rocky change 2011-09-05,was offeringId PwD 2010-12-21 -->
 											</xsl:variable>						
 											<xsl:choose>								
 												<!-- was <xsl:when test="not($getObservation3/*)">  2010-12-18 PwD -->
@@ -1629,7 +1629,7 @@
 
 				<xsl:for-each select="$capabilitiesDocument//sos:ObservationOffering/@gml:id">
 					<xsl:variable name="offeringId" select="."/>
-					<xsl:variable name="offeringName" select="sosFunctions:capabilitiesOfferingName($capabilitiesDocument, $offeringId)"/> <!-- need gml:name URN to get observation PwD 2010-12-21 -->					<ctl:message select="'****'"/> <!-- 2010-12-29 PwD -->				
+					<xsl:variable name="offeringName" select="sosFunctions:capabilitiesOfferingName($capabilitiesDocument, $offeringId)"/> <!-- Rocky change 2011-09-05,need gml:name URN to get observation PwD 2010-12-21 -->					<ctl:message select="'****'"/> <!-- 2010-12-29 PwD -->				
 					<ctl:message select="concat('Offering gml:id: ', $offeringId, ' gml:name: ', $offeringName)"/>
 					
 					<xsl:variable name="beginPosition" select="sosFunctions:beginTimePosition($capabilitiesDocument, $offeringId)"/>
@@ -1679,7 +1679,7 @@
 													<xsl:attribute name="version">
 														<xsl:value-of select="$getObservationVersion"/>
 													</xsl:attribute>									
-													<offering><xsl:value-of select="$offeringName"/></offering> <!--  was offeringId PwD 2010-12-21 -->
+													<offering><xsl:value-of select="$offeringId"/></offering> <!--  was offeringName Rocky change 2011-09-05,was offeringId PwD 2010-12-21 -->
 													<observedProperty>
 														<!-- was <xsl:value-of select="sosFunctions:observationOfferingObservedProperty($capabilitiesDocument, $offeringId)"/>
 															2010-12-29 PwD  but the first property returned is not necessarily available as text/xml, and that failure will be 
@@ -1755,7 +1755,7 @@
 			<ctl:param name="getObservationVersion"/>
 			<ctl:param name="responseFormat"/>					
 			<ctl:param name="observedProperty"/>
-			<!-- <ctl:param name="offeringId"></ctl:param> need gml:name URN to get observation PwD 2010-12-21 -->
+			<ctl:param name="offeringId"></ctl:param> <!-- Rocky change 2011-09-05,need gml:name URN to get observation PwD 2010-12-21 -->
 			<ctl:param name="offeringName"></ctl:param>
 			<ctl:assertion>If a valid filter value is supplied in the result parameter of the request, then the response O &amp; M data is valid for that filter.</ctl:assertion>
 			<ctl:comment>Check that if a valid filter value is supplied in the result parameter of the request, then the response O &amp; M data is valid for that filter.  Pass if response O &amp; M data is valid for the filter when supplied a valid filter; fail otherwise.</ctl:comment>
@@ -1788,7 +1788,7 @@
 								<xsl:attribute name="version">
 									<xsl:value-of select="$getObservationVersion"/>
 								</xsl:attribute>									
-								<offering><xsl:value-of select="$offeringName"/></offering> <!--  was offeringId PwD 2010-12-21 -->
+								<offering><xsl:value-of select="$offeringId"/></offering> <!--  was offeringName Rocky change 2011-09-05,was offeringId PwD 2010-12-21 -->
 								<observedProperty>
 									<xsl:value-of select="$observedProperty"/>
 								</observedProperty>	
@@ -1853,7 +1853,7 @@
 			<ctl:code>				<!--Response Format is per offering-->
 				<xsl:for-each select="$capabilitiesDocument//sos:ObservationOffering/@gml:id">
 					<xsl:variable name="offeringId" select="."/>
-					<xsl:variable name="offeringName" select="sosFunctions:capabilitiesOfferingName($capabilitiesDocument, $offeringId)"/> <!-- need gml:name URN to get observation PwD 2010-12-21 -->
+					<xsl:variable name="offeringName" select="sosFunctions:capabilitiesOfferingName($capabilitiesDocument, $offeringId)"/> <!-- Rocky change 2011-09-05,need gml:name URN to get observation PwD 2010-12-21 -->
 					<ctl:message select="'****'"/> <!-- moved from below 2010-12-29 PwD -->	
 					<ctl:message select="concat('Offering gml:id: ', $offeringId, ' gml:name: ', $offeringName)"/> <!-- 2010-12-29 PwD -->
 					<xsl:if test="not($capabilitiesDocument//sos:ObservationOffering[@gml:id=$offeringId]//sos:responseFormat[starts-with(.,'text/xml')])"> <!-- 2010-12-29 PwD -->
@@ -1889,7 +1889,7 @@
 											<xsl:attribute name="version">
 												<xsl:value-of select="$getObservationVersion"/>
 											</xsl:attribute>									
-											<offering><xsl:value-of select="$offeringName"/></offering> <!--  was offeringId PwD 2010-12-21 -->
+											<offering><xsl:value-of select="$offeringId"/></offering> <!--  was offeringName Rocky change 2011-09-05,was offeringId PwD 2010-12-21 -->
 													<observedProperty>
 														<!-- was <xsl:value-of select="sosFunctions:observationOfferingObservedProperty($capabilitiesDocument, $offeringId)"/>
 															2010-12-29 PwD  but the first property returned is not necessarily available as text/xml, and that failure will be 
@@ -1960,7 +1960,7 @@
 
 				<xsl:for-each select="$capabilitiesDocument//sos:ObservationOffering/@gml:id">
 					<xsl:variable name="offeringId" select="."/>
-					<xsl:variable name="offeringName" select="sosFunctions:capabilitiesOfferingName($capabilitiesDocument, $offeringId)"/> <!-- need gml:name URN to get observation PwD 2010-12-21 -->				
+					<xsl:variable name="offeringName" select="sosFunctions:capabilitiesOfferingName($capabilitiesDocument, $offeringId)"/> <!-- Rocky change 2011-09-05,need gml:name URN to get observation PwD 2010-12-21 -->				
 					<ctl:message select="concat('Offering gml:id: ', $offeringId, ' gml:name: ', $offeringName)"/>
 					<xsl:for-each select="$capabilitiesDocument//sos:ObservationOffering[@gml:id=$offeringId]//sos:responseFormat[starts-with(.,'text/xml')]">
 						<xsl:variable name="responseFormat" select="."/>	
@@ -1989,7 +1989,7 @@
 											<xsl:attribute name="version">
 												<xsl:value-of select="$getObservationVersion"/>
 											</xsl:attribute>									
-											<offering><xsl:value-of select="$offeringName"/></offering> <!--  was offeringId PwD 2010-12-21 -->
+											<offering><xsl:value-of select="$offeringId"/></offering> <!--  was offeringName Rocky change 2011-09-05,was offeringId PwD 2010-12-21 -->
 											<observedProperty>
 												<xsl:value-of select="sosFunctions:observationOfferingObservedProperty($capabilitiesDocument, $offeringId)"/>
 											</observedProperty>
@@ -2068,7 +2068,7 @@
 
 				<xsl:for-each select="$capabilitiesDocument//sos:ObservationOffering/@gml:id">
 					<xsl:variable name="offeringId" select="."/>
-					<xsl:variable name="offeringName" select="sosFunctions:capabilitiesOfferingName($capabilitiesDocument, $offeringId)"/> <!-- need gml:name URN to get observation PwD 2010-12-21 -->				
+					<xsl:variable name="offeringName" select="sosFunctions:capabilitiesOfferingName($capabilitiesDocument, $offeringId)"/> <!-- Rocky change 2011-09-05,need gml:name URN to get observation PwD 2010-12-21 -->				
 					<ctl:message select="concat('Offering gml:id: ', $offeringId, ' gml:name: ', $offeringName)"/>
 					<xsl:for-each select="$capabilitiesDocument//sos:ObservationOffering[@gml:id=$offeringId]//sos:responseFormat[starts-with(.,'text/xml')]">
 						<xsl:variable name="responseFormat" select="."/>	
@@ -2097,7 +2097,7 @@
 											<xsl:attribute name="version">
 												<xsl:value-of select="$getObservationVersion"/>
 											</xsl:attribute>									
-											<offering><xsl:value-of select="$offeringName"/></offering> <!--  was offeringId PwD 2010-12-21 -->
+											<offering><xsl:value-of select="$offeringId"/></offering> <!--  was offeringName Rocky change 2011-09-05,was offeringId PwD 2010-12-21 -->
 											<observedProperty>
 												<xsl:value-of select="sosFunctions:observationOfferingObservedProperty($capabilitiesDocument, $offeringId)"/>
 											</observedProperty>

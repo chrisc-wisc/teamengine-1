@@ -871,7 +871,7 @@
 											<ctl:with-param name="getObservationVersion" select="$getObservationVersion"/>
 											<ctl:with-param name="responseFormat" select="$observationOfferingResponseFormat"/>					
 											<ctl:with-param name="observedProperty" select="$observationOfferingObservedProperty"/>	
-											<!-- <ctl:with-param name="offeringId" select="$offeringId"/>	need gml:name URN to get observation PwD 2010-12-21 -->
+											<ctl:with-param name="offeringId" select="$offeringId"/>	<!-- Rocky change 2011-09-05,need gml:name URN to get observation PwD 2010-12-21 -->
 											<ctl:with-param name="offeringName" select="$offeringName"/>
 										</ctl:call-test>
 									</xsl:if>
@@ -912,7 +912,7 @@
 											<ctl:with-param name="getObservationVersion" select="$getObservationVersion"/>
 											<ctl:with-param name="responseFormat" select="$observationOfferingResponseFormat"/>					
 											<ctl:with-param name="observedProperty" select="$observationOfferingObservedProperty"/>	
-											<!-- <ctl:with-param name="offeringId" select="$offeringId"/>	need gml:name URN to get observation PwD 2010-12-21 -->
+											<ctl:with-param name="offeringId" select="$offeringId"/>	<!-- Rocky change 2011-09-05,need gml:name URN to get observation PwD 2010-12-21 -->
 											<ctl:with-param name="offeringName" select="$offeringName"/>
 										</ctl:call-test>
 									</xsl:if>
@@ -926,7 +926,7 @@
 											<ctl:with-param name="getObservationVersion" select="$getObservationVersion"/>
 											<ctl:with-param name="responseFormat" select="$observationOfferingResponseFormat"/>					
 											<ctl:with-param name="observedProperty" select="$observationOfferingObservedProperty"/>	
-											<!-- <ctl:with-param name="offeringId" select="$offeringId"/>	need gml:name URN to get observation PwD 2010-12-21 -->
+											<ctl:with-param name="offeringId" select="$offeringId"/>	<!-- Rocky change 2011-09-05,need gml:name URN to get observation PwD 2010-12-21 -->
 											<ctl:with-param name="offeringName" select="$offeringName"/>
 										</ctl:call-test>
 									</xsl:if>
@@ -940,7 +940,7 @@
 											<ctl:with-param name="getObservationVersion" select="$getObservationVersion"/>
 											<ctl:with-param name="responseFormat" select="$observationOfferingResponseFormat"/>					
 											<ctl:with-param name="observedProperty" select="$observationOfferingObservedProperty"/>	
-											<!-- <ctl:with-param name="offeringId" select="$offeringId"/>	need gml:name URN to get observation PwD 2010-12-21 -->
+											<ctl:with-param name="offeringId" select="$offeringId"/>	<!-- Rocky change 2011-09-05,need gml:name URN to get observation PwD 2010-12-21 -->
 											<ctl:with-param name="offeringName" select="$offeringName"/>
 										</ctl:call-test>	
 									</xsl:if>
@@ -955,7 +955,7 @@
 											<ctl:with-param name="getObservationVersion" select="$getObservationVersion"/>
 											<ctl:with-param name="responseFormat" select="$observationOfferingResponseFormat"/>					
 											<ctl:with-param name="observedProperty" select="$observationOfferingObservedProperty"/>	
-											<!-- <ctl:with-param name="offeringId" select="$offeringId"/>	need gml:name URN to get observation PwD 2010-12-21 -->
+											<ctl:with-param name="offeringId" select="$offeringId"/>	<!-- Rocky change 2011-09-05,need gml:name URN to get observation PwD 2010-12-21 -->
 											<ctl:with-param name="offeringName" select="$offeringName"/>
 										</ctl:call-test>
 									</xsl:if>
@@ -968,7 +968,7 @@
 											<ctl:with-param name="postURL" select="$getObservationPostURL"/>
 											<ctl:with-param name="getObservationVersion" select="$getObservationVersion"/>
 											<ctl:with-param name="observedProperty" select="$observationOfferingObservedProperty"/>	
-											<!-- <ctl:with-param name="offeringId" select="$offeringId"/>	need gml:name URN to get observation PwD 2010-12-21 -->
+											<ctl:with-param name="offeringId" select="$offeringId"/>	<!-- Rocky change 2011-09-05,need gml:name URN to get observation PwD 2010-12-21 -->
 											<ctl:with-param name="offeringName" select="$offeringName"/>
 										</ctl:call-test>	
 									</xsl:if>
@@ -982,7 +982,7 @@
 											<ctl:with-param name="getObservationVersion" select="$getObservationVersion"/>
 											<ctl:with-param name="responseFormat" select="$observationOfferingResponseFormat"/>					
 											<ctl:with-param name="observedProperty" select="$observationOfferingObservedProperty"/>	
-											<!-- <ctl:with-param name="offeringId" select="$offeringId"/>	need gml:name URN to get observation PwD 2010-12-21 -->
+											<ctl:with-param name="offeringId" select="$offeringId"/>	<!-- Rocky change 2011-09-05,need gml:name URN to get observation PwD 2010-12-21 -->
 											<ctl:with-param name="offeringName" select="$offeringName"/>
 										</ctl:call-test>					
 									</xsl:if>
@@ -996,7 +996,7 @@
 											<ctl:with-param name="getObservationVersion" select="$getObservationVersion"/>
 											<ctl:with-param name="responseFormat" select="$observationOfferingResponseFormat"/>					
 											<ctl:with-param name="observedProperty" select="$observationOfferingObservedProperty"/>	
-											<!-- <ctl:with-param name="offeringId" select="$offeringId"/>	need gml:name URN to get observation PwD 2010-12-21 -->
+											<ctl:with-param name="offeringId" select="$offeringId"/>	<!-- Rocky change 2011-09-05,need gml:name URN to get observation PwD 2010-12-21 -->
 											<ctl:with-param name="offeringName" select="$offeringName"/>
 										</ctl:call-test>
 									</xsl:if>
@@ -1073,7 +1073,7 @@
 											<ctl:with-param name="getObservationVersion" select="$getObservationVersion"/>
 											<ctl:with-param name="responseFormat" select="$observationOfferingResponseFormat"/>					
 											<ctl:with-param name="observedProperty" select="$observationOfferingObservedProperty"/>	
-											<!-- <ctl:with-param name="offeringId" select="$offeringId"/>	need gml:name URN to get observation PwD 2010-12-21 -->
+											<ctl:with-param name="offeringId" select="$offeringId"/>	<!-- Rocky change 2011-09-05,need gml:name URN to get observation PwD 2010-12-21 -->
 											<ctl:with-param name="offeringName" select="$offeringName"/>
 										</ctl:call-test>
 									</xsl:if>
