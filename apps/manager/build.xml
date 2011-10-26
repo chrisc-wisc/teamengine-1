@@ -6,11 +6,7 @@
   <property file="build.properties"/>
 
   <path id="classpath">
-    <!-- this is for Tomcat 5
-  	<fileset dir="${tomcat.dir}/common/lib" includes="servlet-api.jar"/>
-  	-->
-  	<!-- this is for Tomcat 6 -->
-  	<fileset dir="${tomcat.dir}/lib" includes="servlet-api.jar"/>
+  	<fileset dir="${tomcat.common.lib.dir}" includes="servlet-api.jar"/>
     <fileset dir="../engine/lib" includes="*.jar"/>
     <fileset dir="../engine/dist" includes="*.jar"/>
     <fileset dir="lib" includes="*.jar"/>
