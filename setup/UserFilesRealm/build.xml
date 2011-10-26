@@ -5,7 +5,11 @@
   <property file="build.properties"/>
 
   <path id="classpath">
-    <fileset dir="${tomcat.dir}/server/lib" includes="catalina.jar"/>
+  	 <!-- this is for Tomcat 5
+  	  	<fileset dir="${tomcat.dir}/server/lib" includes="catalina.jar"/>
+  	  	-->
+  	<!-- this is for Tomcat 6 -->
+    <fileset dir="${tomcat.dir}/lib" includes="catalina.jar"/>
   </path>
 
   <target name="compile">
@@ -22,5 +26,6 @@
 
   <target name="clean">
     <delete dir="build"/>
+  	<delete file="UserFilesRealm.jar" />
   </target>
 </project>
